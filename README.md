@@ -56,4 +56,4 @@ EzEnum will perform the following:
 
 
 ### Disclaimer
-I am not responsible for the unlawful use of this tool. This tool is to be used for educational purposes only, and any indidividual using this tool is repsonsible solely for their own actions. 
+Creator is not responsible for the unlawful use of this tool. This tool is to be used for educational purposes only.
