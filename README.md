@@ -27,7 +27,7 @@ EzEnum will perform the following:
 - Will perform an Nmap TCP scan against all 65,535 ports on the machine, and output the results to a text file in the 'enumeration' directory
   - If port 80 or 443 is open, EzEnum will automatically fuzz either (or both, if both are open) port for hidden directories using GoBuster, and output the results to a text file in the 'eumeration' directory
   - If port 445 is open, EzEnum will automatically attempt to list the available shares using SMBClient, and outputs the results to a text file.
-- Will perform an Nmap UDP scan, and output the results to a text file in the 'enumeration' directory
+- Will perform an Nmap UDP scan against the top 50 ports, and output the results to a text file in the 'enumeration' directory
   - Optional; you get the decision at the beginning of the script to skip this if you want
 
 
