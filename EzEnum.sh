@@ -274,7 +274,7 @@ if [[ $answer == "Y" || $answer == "y" ]];then
 		sleep 1
 	elif
 		[[ $response == "THM" || $response == "thm" ]];then 
-			nmap -sU -p 1-5000 $tn 1>/home/$USER/Documents/$site/$tn/enumeration/nmapudpresults.txt
+			nmap -sU --top-ports 50 $tn 1>/home/$USER/Documents/$site/$tn/enumeration/nmapudpresults.txt
 			echo -e "${green}[+] Nmap UDP results saved to ${red}$site/$tn/enumeration/nmapudpresults.txt ${ec}"
 			sleep 1
 	fi
