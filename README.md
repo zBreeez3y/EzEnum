@@ -1,7 +1,8 @@
 # EzEnum v1.1.0
  
 
-![image](https://user-images.githubusercontent.com/98996357/161857762-e3160fca-90b9-44be-9e85-153dbac475ce.png)
+![image](https://user-images.githubusercontent.com/98996357/167476640-21c8519a-9364-4e23-98ab-99ce9cd3e89a.png)
+
 
 
 
