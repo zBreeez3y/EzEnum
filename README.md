@@ -1,4 +1,4 @@
-# EzEnum 
+# EzEnum v1.1.0
  
 
 ![image](https://user-images.githubusercontent.com/98996357/161857762-e3160fca-90b9-44be-9e85-153dbac475ce.png)
@@ -15,21 +15,24 @@
  
 ## What EzEnum does...
 EzEnum will perform the following:
+- Will automatically connect to your HackTheBox/TryHackMe VPN connection respectively
 - Will check to make sure all dependencies are installed and that SecLists is in the /usr/share directory
 - Ask whether you're doing a TryHackMe or HackTheBox machine, create a main directory using the machines name, and sub-directories with that to provide organization to the files you may come across throughout the different stages of the machine
-  - Sub-Folders:
+  - Sub-directories:
     - Enumeration
     - Exploitation
     - Post-exploitation
 
 - Will take the machines name and IP, and add it to the hosts file
 - Will ping the machine to make sure it can communicate with it
-   - If any of the pings drop, it will stop the script and remove the hosts file entry
-- Will perform an Nmap TCP scan against all 65,535 ports on the machine, and output the results to a text file in the 'enumeration' directory
-  - If port 80 or 443 is open, EzEnum will automatically fuzz either (or both, if both are open) port for hidden directories using WFuzz, and output the results to a text file in the 'enumeration' directory
-  - If port 445 is open, EzEnum will automatically attempt to list the available shares using SMBClient, and outputs the results to a text file.
+   - If the machine you're testing on doesn't respond to ICMP requests, you will have the option to continue and run your Nmap scans with the no ping switch 
+- Will perform an Nmap TCP-SYN scan against all 65,535 ports on the machine, and output the results to a text file in the 'enumeration' directory
 - Will perform an Nmap UDP scan against the top 50 ports, and output the results to a text file in the 'enumeration' directory
   - Optional; you get the decision at the beginning of the script to skip this if you want
+- Will perform a directory scan using WFuzz if ports 80, 8080 or 443 are open, and output the results to a text file in the 'enumeration' directory
+- Will perform a subdomain scan using WFuzz if ports 80, 8080 or 443 are open, and output the results to a text file in the 'enumeration' directory
+- Will attempt to list available shares using SMBClient if port 445 is open, and output the results to a text file in the 'enumeration' directory
+
 
 
 
@@ -49,6 +52,12 @@ EzEnum will perform the following:
  
   - **Figlet** (for the banner)
     -     sudo apt install figlet
+
+  - **OpenVPN** 
+    -     sudo apt install openvpn
+   
+  - **XTerm** 
+    -     sudo apt install xterm
       
 
 ## Usage
