@@ -17,6 +17,12 @@
 ## What EzEnum does...
 EzEnum will perform the following:
 - Will automatically connect to your HackTheBox/TryHackMe VPN connection respectively
+  #### IMPORTANT: 
+   - **You will have to edit the script to supply the path to your TryHackMe/HackTheBox OVPN file.**
+   - Edit the path on line **212** and provide path to HackTheBox OVPN
+   - Edit the path on line **230** and provide path to TryHackMe OVPN                   
+    ![image](https://user-images.githubusercontent.com/98996357/167472486-d592321c-fceb-422b-bdc2-8fbf26aec7e8.png)
+    ![image](https://user-images.githubusercontent.com/98996357/167472557-d1824324-ab9e-441b-832a-0aa800d8e4cd.png)
 - Will check to make sure all dependencies are installed and that SecLists is in the /usr/share directory
 - Ask whether you're doing a TryHackMe or HackTheBox machine, create a main directory using the machines name, and sub-directories with that to provide organization to the files you may come across throughout the different stages of the machine
   - Sub-directories:
