@@ -9,7 +9,7 @@
 - Added support for FTP server detection
   - Added feature to check for anonymous login
   - Mirrors entire share to a local directory which will be created in the machines' "enumeration" directory if anonymous login is allowed
-- Appended ".htb" local TLD to hostname when selecting HackTheBox machine option
+- Appended ".htb" local domain to hostname when selecting HackTheBox machine option
 - Updated error handling logic to ensure a legitimate IP is specified when asked for the machines IP
 - Replaced WFuzz with Gobuster for directory/subdomain (vhost) busting
   - Requires at least version 1.19 of Golang be installed
