@@ -1,9 +1,20 @@
-# EzEnum v1.1.0
+# EzEnum 
  
 
 ![image](https://user-images.githubusercontent.com/98996357/167476640-21c8519a-9364-4e23-98ab-99ce9cd3e89a.png)
 
-
+## Change Log
+### v1.2.0
+- Added support for FTP server detection
+  - Added feature to check for anonymous login
+  - Mirrors entire share to a local directory which will be created in the machines' "enumeration" directory if anonymous login is allowed
+- Appended ".htb" local TLD to hostname when selecting HackTheBox machine option
+- Updated error handling logic to ensure a legitimate IP is specified when asked for the machines IP
+- Replaced WFuzz with Gobuster for directory/subdomain (vhost) busting
+  - Requires at least version 1.19 of Golang be installed
+- Updated Nmap scan packets per second minimum rate to 1000
+- Added feature to set permissions for all directories/files created during script to the user set in the initial prompts
+- Various minor cosmetic changes
 
 
  ## What is EzEnum?
@@ -19,8 +30,8 @@ EzEnum will perform the following:
 - Will automatically connect to your HackTheBox/TryHackMe VPN connection respectively
   #### IMPORTANT: 
    - **You will have to edit the script to supply the path to your TryHackMe/HackTheBox OVPN file.**
-   - Edit the path on line **212** and provide path to HackTheBox OVPN
-   - Edit the path on line **230** and provide path to TryHackMe OVPN                   
+   - Edit the path on line **223** and provide path to HackTheBox OVPN
+   - Edit the path on line **241** and provide path to TryHackMe OVPN                   
     ![image](https://user-images.githubusercontent.com/98996357/167472486-d592321c-fceb-422b-bdc2-8fbf26aec7e8.png)
     ![image](https://user-images.githubusercontent.com/98996357/167472557-d1824324-ab9e-441b-832a-0aa800d8e4cd.png)
 - Will check to make sure all dependencies are installed and that SecLists is in the /usr/share directory
@@ -39,6 +50,7 @@ EzEnum will perform the following:
 - Will perform a directory scan using WFuzz if ports 80, 8080 or 443 are open, and output the results to a text file in the 'enumeration' directory
 - Will perform a subdomain scan using WFuzz if ports 80, 8080 or 443 are open, and output the results to a text file in the 'enumeration' directory
 - Will attempt to list available shares using SMBClient if port 445 is open, and output the results to a text file in the 'enumeration' directory
+- Will grab all FTP files if port 21 is open and anonymous login is enabled
 
 
 
@@ -65,8 +77,13 @@ EzEnum will perform the following:
    
   - **XTerm** 
     -     sudo apt install xterm
-      
 
+  - **Golang**
+    -     sudo apt install -y golang 
+    - Then run the following: 
+    -     echo 'export GOROOT=/usr/lib/go' >> ~/.bashrc && echo 'export GOPATH=$HOME/go' >> ~/.bashrc && echo 'export PATH=$GOPATH/bin:$GOROOT/bin:$PATH' >> ~/.bashrc
+  - **Gobuster** 
+    -    sudo apt install gobuster
 ## Usage
   - EzEnum should be ran as the super user
       -     sudo ./EzEnum.sh
