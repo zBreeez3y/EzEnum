@@ -28,7 +28,7 @@
  
 ## What EzEnum does...
 EzEnum will perform the following:
-- Will automatically connect to your HackTheBox/TryHackMe VPN connection respectively
+- Will automatically connect to your HackTheBox/TryHackMe VPN server respectively
   #### IMPORTANT: 
    - **You will have to edit the script to supply the path to your TryHackMe/HackTheBox OVPN file.**
    - Edit the path on line **223** and provide path to HackTheBox OVPN
@@ -57,13 +57,11 @@ EzEnum will perform the following:
 
 
 ## Dependencies:
-  - **WFuzz**
-     -     sudo apt install wfuzz
   - **SecLists** (for wordlist, SecLists directory should be in the /usr/share directory for this script)
      - I used Git to install SecLists
         -     sudo apt install git
               sudo git clone https://github.com/danielmiessler/SecLists.git
-              sudo mv SecLists/ /usr/share/SecLists   
+              sudo mv seclists/ /usr/share/seclists   
   - **Nmap**
      -     sudo apt install nmap
 
