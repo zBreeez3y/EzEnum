@@ -17,15 +17,16 @@ wf=$(which wfuzz | wc -l)
 sc=$(which smbclient | wc -l)
 xt=$(which xterm | wc -l)
 ovpn=$(which openvpn | wc -l)
-sl=$(ls /usr/share/SecLists 2>&1 > /dev/null | grep "cannot access" | wc -l)
+sl=$(ls /usr/share/seclists 2>&1 > /dev/null | grep "cannot access" | wc -l)
+go=$(which gobuster | wc -l)
 
 if [ $sl == 1 ];then
 	echo -e "${red}Error!${ec}"
-	echo "SecLists is not in the /usr/share directory..."
+	echo "seclists is not in the /usr/share directory..."
 	exit
 fi
 
-tools=( $fig $nm $wf $sc $xt $ovpn )
+tools=( $fig $nm $wf $sc $xt $ovpn $go )
 for bin in ${tools[@]}; do
 	while [[ $bin == 0 ]]; do		
 		echo -e "${red}Error!${ec}"
@@ -45,7 +46,10 @@ for bin in ${tools[@]}; do
 			echo "XTerm is not installed (sudo apt install xterm)..."
 		fi
 		if [ $ovpn == 0 ];then
-			echo "OpenVPN is not installed (sudo apt install openvpn)..."						
+			echo "OpenVPN is not installed (sudo apt install openvpn)..."
+		fi
+		if [ $go == 0 ];then
+		 	echo "Gobuster is not installed..."
 		fi			
 		exit
 	done
@@ -55,8 +59,8 @@ done
 #Banner
 echo "========================================================================================="
 figlet -c -f slant "EzEnum"
-echo -e "				By: ${bg}D0p3B34t5${ec}" 
-echo -e "\n				Version: ${blue}1.1.0 ${ec}"
+echo -e "				By: ${bg}zBeeez3y${ec}" 
+echo -e "\n				Version: ${blue}1.2.0 ${ec}"
 echo "========================================================================================="
 
 
@@ -122,7 +126,8 @@ while [[ ${#ti} -gt 15 ]]; do
 		ok=1
 	fi
 done
-while [[ $ti =~ ^[a-zA-Z]+$ ]]; do
+regex='^([0-9]{1,3}\.){3}[0-9]{1,3}$'
+while ! [[ $ti =~ $regex  ]]; do
 	read -p "Please provide a valid IPv4 addresss: " ti
 	while [[ $ti == "" ]]; do
 		read -p "Please provide a valid IPv4 address: " ti
@@ -152,6 +157,12 @@ while true; do
 			read -p 'Please respond with "Y" or "N": ' answer
 	esac
 done
+
+
+#Append .htb local TLD to host's name
+if [[ $response == "HTB" || $response == "htb" ]];then
+tn=$tn.htb
+fi
 
 
 #Setting site variable
@@ -221,7 +232,7 @@ elif
 			elif
 				[ $vpn == 0 ];then
 					echo -e "${red}[+] Unable to connect to VPN..." 
-					echo -e "[+] Check and make sure you changed your HackTheBox OVPN path on line 212..."
+					echo -e "[+] Check and make sure you changed your HackTheBox OVPN path on line 223..."
 					echo -e "[+] Exiting script...${ec}" 
 					exit
 			fi
@@ -239,7 +250,7 @@ elif
 			elif
 				[ $vpn == 0 ];then
 					echo -e "${red}[+] Unable to connect to VPN..."
-					echo -e "[+] Check and make sure you changed your TryHackMe OVPN path on line 230..."
+					echo -e "[+] Check and make sure you changed your TryHackMe OVPN path on line 241..."
 					echo -e "[+] Exiting script...${ec}"					
 					exit
 			fi
@@ -254,8 +265,8 @@ clear -x
 #New Banner with variable output displayed
 echo "========================================================================================="
 figlet -c -f slant "EzEnum"
-echo -e "				by: ${bg}D0p3B34t5${ec}"
-echo -e "\n				Version: ${blue}1.1.0 ${ec}"
+echo -e "				by: ${bg}zBreeez3y${ec}"
+echo -e "\n				Version: ${blue}1.2.0 ${ec}"
 echo "========================================================================================="
 echo "========================================================================================="
 echo -e "[+] ${yellow}Site: ${ec}$site"
@@ -330,18 +341,12 @@ if [[ $response == "HTB" || $response == "htb" ]];then
 		echo -e "${green}[+] Creating main HackTheBox directory... ${ec}"
 		sleep 1
 		mkdir /home/$USER/Documents/$site
-	else
-		echo -e "${green}[+] Main directory already exists. Continuing... ${ec}"
-		sleep 1
 	fi
 elif 
 	[[ $response == "THM" || $response == "thm" ]];then
 		if [ ! -d "/home/$USER/Documents/$site" ];then
 			echo -e "${green}[+] Creating main TryHackMe directory... ${ec}"
 			mkdir /home/$USER/Documents/$site
-			sleep 1
-		else 
-			echo -e "${green}[+] Main directory already exists. Continuing... ${ec}"
 			sleep 1
 		fi
 fi
@@ -356,6 +361,9 @@ if [[ $response == "HTB" || $response == "htb" ]];then
 		mkdir /home/$USER/Documents/HackTheBox/$tn/exploitation
 		mkdir /home/$USER/Documents/HackTheBox/$tn/post-exploitation
 		sleep 1
+	else
+	 echo -e "${green}[+] Directories already exist. Continuing...${ec}"
+	 sleep 1
 	fi
 elif 
 	[[ $response == "THM" || $response == "thm" ]];then 
@@ -366,6 +374,9 @@ elif
 			mkdir /home/$USER/Documents/TryHackMe/$tn/exploitation
 			mkdir /home/$USER/Documents/TryHackMe/$tn/post-exploitation
 			sleep 1
+		else
+		 echo -e "${green}[+] Directories already exist. Continuing... ${ec}"
+		 sleep 1
 		fi
 fi
 
@@ -374,7 +385,7 @@ fi
 if [[ $continue == "Y" || $continue == "y" ]];then	
 	echo -e "${green}[+] Scanning for open ports on ${blue}$tn${green}...${ec}"
 	sleep 1
-	open=$(nmap -T4 --min-rate 750 -p- -Pn $tn | grep ^[0-9] | cut -d '/' -f 1 | sed -e '$!s/$/,/' | tr -d '\n')
+	open=$(nmap -T4 --min-rate 1000 -p- -Pn $tn | grep ^[0-9] | cut -d '/' -f 1 | sed -e '$!s/$/,/' | tr -d '\n')
 	echo -e "${green}[+] Starting Nmap SYN scan against open ports... ${ec}"
 	nmap -sS -sV -A -T4 -p $open -Pn $tn 1>/home/$USER/Documents/$site/$tn/enumeration/nmapresults.txt 2>&1
 	echo -e "${green}[+] Nmap SYN scan results saved to ${red}/Documents/$site/$tn/enumeration/nmapresults.txt"			
@@ -382,7 +393,7 @@ elif
 	[[ -z "$continue" ]];then
 		echo -e "${green}[+] Scanning for open ports on ${blue}$tn${green}...${ec}"
 		sleep 1
-		open=$(nmap -T4 --min-rate 750 -p- $tn | grep ^[0-9] | cut -d '/' -f 1 | sed -e '$!s/$/,/' | tr -d '\n')
+		open=$(nmap -T4 --min-rate 1000 -p- $tn | grep ^[0-9] | cut -d '/' -f 1 | sed -e '$!s/$/,/' | tr -d '\n')
 		echo -e "${green}[+] Starting Nmap SYN scan against open ports... ${ec}"
 		nmap -sS -sV -A -T4 -p $open $tn 1>/home/$USER/Documents/$site/$tn/enumeration/nmapresults.txt 2>&1
 		echo -e "${green}[+] Nmap SYN scan results saved to ${red}/Documents/$site/$tn/enumeration/nmapresults.txt"	
@@ -394,7 +405,7 @@ ws=$(grep ^[0-9] /home/$USER/Documents/$site/$tn/enumeration/nmapresults.txt | g
 ws8=$(grep ^[0-9] /home/$USER/Documents/$site/$tn/enumeration/nmapresults.txt | grep "8080/tcp" | wc -l)
 wss=$(grep ^[0-9] /home/$USER/Documents/$site/$tn/enumeration/nmapresults.txt | grep "443/tcp" | wc -l)
 smb=$(grep ^[0-9] /home/$USER/Documents/$site/$tn/enumeration/nmapresults.txt | grep "445/tcp" | wc -l)
-
+ftp=$(grep ^[0-9] /home/$USER/Documents/$site/$tn/enumeration/nmapresults.txt | grep "21/tcp" | wc -l)
 
 #Nmap UDP scan
 if [[ $continue == "Y" || $continue == "y" ]];then
@@ -405,7 +416,7 @@ if [[ $continue == "Y" || $continue == "y" ]];then
 		sleep 1
 	elif	
 		[[ $answer == "N" || $answer == "n" ]];then
-			echo -e "${green}[+] Skipping UDP scan... ${ec}"
+			echo -e "${yellow}[+] Skipping UDP scan... ${ec}"
 			sleep 1
 	
 	fi
@@ -418,60 +429,55 @@ elif
 			sleep 1
 		elif	
 			[[ $answer == "N" || $answer == "n" ]];then
-				echo -e "${green}[+] Skipping UDP scan... ${ec}"
+				echo -e "${yellow}[+] Skipping UDP scan... ${ec}"
 				sleep 1
 		fi
 fi
 
 
-#WFuzz directory scan
+#GoBuster directory scan
 if [[ $ws == 1 || $wss == 1 || $ws8 == 1 ]];then
 	if [ $ws == 1 ];then
-		echo -e "${green}[+] Port 80 is open, starting WFuzz directory scan on ${blue}$tn${green}:80... ${ec}"
-		wfuzz -t 30 --req-delay 10 -w /usr/share/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt -u http://$tn:80/FUZZ 1>/home/$USER/Documents/$site/$tn/enumeration/wfuzzdir80results.txt 2>&1
-		echo -e "${green}[+] WFuzz results for port 80 saved in ${red}/Documents/$site/$tn/enumeration/wfuzzdir80results.txt ${ec}"
+		echo -e "${green}[+] Port 80 is open, starting GoBuster directory scan on ${blue}$tn${green}:80... ${ec}"
+		gobuster dir -t 150 -u http://$tn:80/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt 1>/home/$USER/Documents/$site/$tn/enumeration/godir80.txt 2>&1
+		echo -e "${green}[+] GoBuster results for port 80 saved in ${red}/Documents/$site/$tn/enumeration/godir80.txt ${ec}"
 		sleep 1
 	fi
 	if [ $wss == 1 ];then
-		echo -e "${green}[+] Port 443 is open, starting WFuzz directory scan on ${blue}$tn${green}:443... ${ec}"
-		wfuzz -t 30 --req-delay 10 -w /usr/share/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt -u http://$tn:443/FUZZ 1>/home/$USER/Documents/$site/$tn/enumeration/wfuzzdir443results.txt 2>&1
-		echo -e "${green}[+] WFuzz results for port 443 saved in ${red}/Documents/$site/$tn/enumeration/wfuzzdir443results.txt ${ec}"
+		echo -e "${green}[+] Port 443 is open, starting GoBuster directory scan on ${blue}$tn${green}:443... ${ec}"
+		gobuster dir -t 150 -u http://$tn:443/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt 1>/home/$USER/Documents/$site/$tn/enumeration/godir443.txt 2>&1
+		echo -e "${green}[+] GoBuster results for port 443 saved in ${red}/Documents/$site/$tn/enumeration/godir443.txt ${ec}"
 		sleep 1
 	fi
 	if [ $ws8 == 1 ];then
-		echo -e "${green}[+] Port 8080 is open, starting WFuzz directory scan on ${blue}$tn${green}:8080... ${ec}"
-		wfuzz -t 30 --req-delay 10 -w /usr/share/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt -u http://$tn:8080/FUZZ 1>/home/$USER/Documents/$site/$tn/enumeration/wfuzzdir8080results.txt 2>&1
-		echo -e "${green}[+] WFuzz results for port 8080 saved in ${red}/Documents/$site/$tn/enumeration/wfuzzdir8080results.txt ${ec}"
+		echo -e "${green}[+] Port 8080 is open, starting GoBuster directory scan on ${blue}$tn${green}:8080... ${ec}"
+		gobuster dir -t 150 -u http://$tn:8080/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt 1>/home/$USER/Documents/$site/$tn/enumeration/godir8080.txt 2>&1
+		echo -e "${green}[+] GoBuster results for port 8080 saved in ${red}/Documents/$site/$tn/enumeration/godir8080.txt ${ec}"
 		sleep 1
 	fi		
-else
-	echo -e "${green}[+] Ports 80/443/8080 do not appear to be open. Skipping directory scan ${ec}"
-	sleep 1
 fi
 
 
-#WFuzz subdomain scan
+#GoBuster subdomain scan
 if [[ $ws == 1 || $wss == 1 || $ws8 == 1 ]];then
 	if [ $ws == 1 ];then
 		echo -e "${green}[+] Scanning for subdomains on ${blue}$tn${green}:80... ${ec}"
-		wfuzz -c -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -u http://$tn:80 -H "Host: FUZZ.$tn" 1>/home/$USER/Documents/$site/$tn/enumeration/subdomains80.txt 2>&1
-		echo -e "${green}[+] Subdomain results for port 80 saved in ${red}/Documents/$site/$tn/enumeration/subdomains80.txt ${ec}"
+		gobuster vhost -t 150 -u http://$tn:80/ -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt 1>/home/$USER/Documents/$site/$tn/enumeration/govhost80.txt --append-domain 2>&1
+		echo -e "${green}[+] Subdomain results for port 80 saved in ${red}/Documents/$site/$tn/enumeration/govhost80.txt ${ec}"
 		sleep 1
 	fi
 	if [ $wss == 1 ];then
 		echo -e "${green}[+] Scanning for subdomains on ${blue}$tn${green}:443... ${ec}"
-		wfuzz -c -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -u http://$tn:443 -H "Host: FUZZ.$tn" 1>/home/$USER/Documents/$site/$tn/enumeration/subdomains443.txt 2>&1
-		echo -e "${green}[+] Subdomain results for port 443 saved in ${red}/Documents/$site/$tn/enumeration/subdomains443.txt ${ec}"
+		gobuster vhost -t 150 -u http://$tn:443/ -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt 1>/home/$USER/Documents/$site/$tn/enumeration/govhost443.txt --append-domain 2>&1
+		echo -e "${green}[+] Subdomain results for port 443 saved in ${red}/Documents/$site/$tn/enumeration/govhost443.txt ${ec}"
 		sleep 1
 	fi
 	if [ $ws8 == 1 ];then
 		echo -e "${green}[+] Scanning for subdomains on ${blue}$tn${green}:8080... ${ec}"
-		wfuzz -c -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -u http://$tn:8080 -H "Host: FUZZ.$tn" 1>/home/$USER/Documents/$site/$tn/enumeration/subdomains8080.txt 2>&1
-		echo -e "${green}[+] Subdomain results for port 8080 saved in ${red}/Documents/$site/$tn/enumeration/subdomains8080.txt ${ec}"
+		gobuster vhost -t 150 -u http://$tn:8080/ -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt 1>/home/$USER/Documents/$site/$tn/enumeration/govhost8080.txt --append-domain 2>&1
+		echo -e "${green}[+] Subdomain results for port 8080 saved in ${red}/Documents/$site/$tn/enumeration/govhost8080.txt ${ec}"
 		sleep 1
 	fi
-else
-	echo -e "${green}[+] Ports 80/443/8080 do not appear to be open. Skipping subdomain scan... ${ec}"
 fi
 
 	
@@ -482,9 +488,27 @@ if [ $smb == 1 ];then
 	sleep 1
 	echo -e "${green}[+] SMB list saved to ${red}/$site/$tn/enumeration/shares.txt ${ec}"
 	sleep 1
-else
-	echo -e "${green}[+] Port 445 does not appear to be open, no shares to list... ${ec}"
-	sleep 1
 fi
 
-echo -e "${blue}[+] Script Complete.... #EzLife ${ec}"
+
+#If FTP open, check for anonymous login. If anon login, get all files
+anon=$(grep -i "Anonymous FTP login allowed" /home/$USER/Documents/$site/$tn/enumeration/nmapresults.txt | wc -l)
+if [ $ftp == 1 ];then
+ if [ $anon == 1 ];then
+		echo -e "${blue}[+] FTP is open, and Anonymous login is allowed. Creating FTP directory and getting files...${ec}"
+		mkdir /home/$USER/Documents/$site/$tn/enumeration/ftp
+		cd /home/$USER/Documents/$site/$tn/enumeration/ftp
+		wget -m ftp://anonymous@$tn/ > ftplog.txt 2>&1 
+		cd $OLDPWD
+	elif 
+	 [ $anon == 0 ];then
+   echo -e "${blue}[+] FTP is open, but anonymous login does not appear to be allowed...${ec}"
+ fi 
+fi
+
+#Setting permissions to user set in initial prompts
+echo -e "${green}[+] Setting permissions on all directories/files created to ${blue}$USER${ec}"
+chown -R $USER:$USER /home/$USER/Documents/$site/$tn/
+sleep 1
+
+echo -e "${blue}[+] Script Complete.... #EzLife ${ec}" 
