@@ -83,7 +83,7 @@ EzEnum will perform the following:
     - Then run the following: 
     -     echo 'export GOROOT=/usr/lib/go' >> ~/.bashrc && echo 'export GOPATH=$HOME/go' >> ~/.bashrc && echo 'export PATH=$GOPATH/bin:$GOROOT/bin:$PATH' >> ~/.bashrc
   - **Gobuster** 
-    -    sudo apt install gobuster
+    -     sudo apt install gobuster
 ## Usage
   - EzEnum should be ran as the super user
       -     sudo ./EzEnum.sh
