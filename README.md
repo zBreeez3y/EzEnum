@@ -48,8 +48,8 @@ EzEnum will perform the following:
 - Will perform an Nmap TCP-SYN scan against all 65,535 ports on the machine, and output the results to a text file in the 'enumeration' directory
 - Will perform an Nmap UDP scan against the top 50 ports, and output the results to a text file in the 'enumeration' directory
   - Optional; you get the decision at the beginning of the script to skip this if you want
-- Will perform a directory scan using WFuzz if ports 80, 8080 or 443 are open, and output the results to a text file in the 'enumeration' directory
-- Will perform a subdomain scan using WFuzz if ports 80, 8080 or 443 are open, and output the results to a text file in the 'enumeration' directory
+- Will perform a directory scan using Gobuster if ports 80, 8080 or 443 are open, and output the results to a text file in the 'enumeration' directory
+- Will perform a subdomain scan using Gobuster if ports 80, 8080 or 443 are open, and output the results to a text file in the 'enumeration' directory
 - Will attempt to list available shares using SMBClient if port 445 is open, and output the results to a text file in the 'enumeration' directory
 - Will grab all FTP files if port 21 is open and anonymous login is enabled
 
