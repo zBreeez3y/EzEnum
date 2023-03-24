@@ -13,7 +13,6 @@ ec="\e[0m"
 #Check for dependencies, exit if any aren't installed
 fig=$(which figlet | wc -l)
 nm=$(which nmap | wc -l)
-wf=$(which wfuzz | wc -l)
 sc=$(which smbclient | wc -l)
 xt=$(which xterm | wc -l)
 ovpn=$(which openvpn | wc -l)
@@ -26,7 +25,7 @@ if [ $sl == 1 ];then
 	exit
 fi
 
-tools=( $fig $nm $wf $sc $xt $ovpn $go )
+tools=( $fig $nm $sc $xt $ovpn $go )
 for bin in ${tools[@]}; do
 	while [[ $bin == 0 ]]; do		
 		echo -e "${red}Error!${ec}"
@@ -35,9 +34,7 @@ for bin in ${tools[@]}; do
 		fi
 		if [ $nm == 0 ];then
 			echo "Nmap is not installed (sudo apt install nmap)..."							
-		fi
-		if [ $wf == 0 ];then
-			echo "WFuzz is not installed (sudo apt install wfuzz)..."					
+		fi					
 		fi
 		if [ $sc == 0 ];then
 			echo "SMBClient is not installed (sudo apt install smbclient)..."			
