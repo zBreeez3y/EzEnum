@@ -1,7 +1,8 @@
 # EzEnum 
  
 
-![image](https://user-images.githubusercontent.com/98996357/167476640-21c8519a-9364-4e23-98ab-99ce9cd3e89a.png)
+![image](https://user-images.githubusercontent.com/98996357/227412427-8fe15ac0-f6ba-40dc-8614-cdbccc283669.png)
+
 
 ## Change Log
 ### v1.2.0
