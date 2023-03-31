@@ -1,10 +1,16 @@
 # EzEnum 
  
 
-![image](https://user-images.githubusercontent.com/98996357/227412427-8fe15ac0-f6ba-40dc-8614-cdbccc283669.png)
+![image](https://user-images.githubusercontent.com/98996357/229011440-30629d2e-14ea-46e3-8c7f-971c712c75cb.png)
+
 
 
 ## Change Log
+### v1.2.1
+- Appended ".thm" local domain if choosing TryHackMe machine
+- Added another machine name variable for the local domain to be appended to
+  - This prevents the folder names from having the domain included while having the scans call the variable with the domain
+-  Added banner to dependency error messages
 ### v1.2.0
 - Added support for FTP server detection
   - Added feature to check for anonymous login
