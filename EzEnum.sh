@@ -230,7 +230,7 @@ elif
 	[ $vpn == 0 ];then
 		echo -e "${green}[+] Attempting to connect to VPN... ${ec}"
 		if [[ $response == "HTB" || $response == "htb" ]];then
-			xterm -e openvpn /home/$USER/Downloads/lab_zBreeezey.ovpn& #<---- Change this path to your HackTheBox OVPN file's path. Leave the /home/$USER, and the "&" at the end.
+			xterm -e openvpn /home/$USER/Path/To/HackTheBox.ovpn& #<---- Change this path to your HackTheBox OVPN file's path. Leave the /home/$USER, and the "&" at the end.
 			sleep 5
 			vpn=$(ifconfig | grep "tun0" | wc -l)
 			if [ $vpn == 1 ];then
@@ -248,7 +248,7 @@ elif
 			fi
 		elif
 			[[ $response == "THM" || $response == "thm" ]];then
-				xterm -e openvpn /home/$USER/Downloads/dopebeats.ovpn& #<---- Change this path to your TryHackMe OVPN file's path. Leave the /home/$USER, and the "&" at the end.
+				xterm -e openvpn /home/$USER/Path/To/TryHackMe.ovpn& #<---- Change this path to your TryHackMe OVPN file's path. Leave the /home/$USER, and the "&" at the end.
 				sleep 5
 				vpn=$(ifconfig | grep "tun0" | wc -l)
 				if [ $vpn == 1 ];then
