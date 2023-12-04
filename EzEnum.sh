@@ -1,7 +1,15 @@
 #!/bin/bash
 
+#Banner function
+banner() {
+	echo "========================================================================================="
+	figlet -c -f slant "EzEnum"
+	echo -e "				  By: ${bg}zBeeez3y${ec}" 
+	echo -e "\n				 Version: ${blue}1.2.2 ${ec}"
+	echo "========================================================================================="
+}
 
-#Terminal color variables; ec=end color (white) 
+#Terminal color variables
 green="\e[32;1m"
 bg="\e[35;1m"
 red="\e[31;1m"
@@ -9,6 +17,13 @@ blue="\e[34;1m"
 yellow="\e[33;1m"
 ec="\e[0m"
 
+#Checking for root user
+root=$(id -u)
+if [  $root != 0 ];then
+	banner
+	echo -e "${red}[!] Must run script as root user.\nSyntax: sudo ./EzEnum.sh ${ec}"
+	exit
+fi
 
 #Check for dependencies, exit if any aren't installed
 fig=$(which figlet | wc -l)
@@ -16,70 +31,62 @@ nm=$(which nmap | wc -l)
 sc=$(which smbclient | wc -l)
 xt=$(which xterm | wc -l)
 ovpn=$(which openvpn | wc -l)
-sl=$(ls /usr/share/seclists 2>&1 > /dev/null | grep "cannot access" | wc -l)
+sl=$(which seclists | wc -l)
 go=$(which gobuster | wc -l)
-
-if [ $sl == 1 ];then
-	#Banner
-	echo "========================================================================================="
-	figlet -c -f slant "EzEnum"
-	echo -e "				  By: ${bg}zBreeez3y${ec}" 
-	echo -e "\n				 Version: ${blue}1.2.1 ${ec}"
-	echo "========================================================================================="
-	echo -e "${red}Error!${ec}"
-	echo -e "\n[+] seclists is not in the /usr/share directory..."
-	exit
-fi
 
 tools=( $fig $nm $sc $xt $ovpn $go )
 for bin in ${tools[@]}; do
 	while [[ $bin == 0 ]]; do
-		#Banner
-		echo "========================================================================================="
-		figlet -c -f slant "EzEnum"
-		echo -e "				  By: ${bg}zBreeez3y${ec}" 
-		echo -e "\n				 Version: ${blue}1.2.1 ${ec}"
-		echo "========================================================================================="		
-		echo -e "${red}[+] Error!${ec}"
+		banner
+		echo -e "${red}[!] Error!${ec}"
 		if [ $fig == 0 ];then
-			echo -e "\n[+] Figlet is not installed (sudo apt install figlet)..."					
+			echo -e "\n[!] Figlet is not installed (sudo apt install figlet)..."					
 		fi
 		if [ $nm == 0 ];then
-			echo -e "\n[+] Nmap is not installed (sudo apt install nmap)..."							
+			echo -e "\n[!] Nmap is not installed (sudo apt install nmap)..."							
 		fi
 		if [ $sc == 0 ];then
-			echo -e "\n[+] SMBClient is not installed (sudo apt install smbclient)..."			
+			echo -e "\n[!] SMBClient is not installed (sudo apt install smbclient)..."			
 		fi
 		if [ $xt == 0 ];then
-			echo -e "\n[+] XTerm is not installed (sudo apt install xterm)..."
+			echo -e "\n[!] XTerm is not installed (sudo apt install xterm)..."
 		fi
 		if [ $ovpn == 0 ];then
-			echo -e "\n[+] OpenVPN is not installed (sudo apt install openvpn)..."
+			echo -e "\n[!] OpenVPN is not installed (sudo apt install openvpn)..."
 		fi
 		if [ $go == 0 ];then
-		 	echo -e "\n[+] Gobuster is not installed..."
+		 	echo -e "\n[!] Gobuster is not installed..."
+		fi
+		if [ $sl == 0 ];then
+			echo -e "\n[!] Seclists is not installed (sudo apt install seclists)..."					
 		fi			
 		exit
 	done
 done
 
-
-#Banner
-echo "========================================================================================="
-figlet -c -f slant "EzEnum"
-echo -e "				  By: ${bg}zBreeez3y${ec}" 
-echo -e "\n				 Version: ${blue}1.2.1 ${ec}"
-echo "========================================================================================="
-
-
-#Checking for root user
-root=$(id -u)
-if [  $root != 0 ];then
-	echo -e "${red}Must run script as root user.\nSyntax: sudo ./EzEnum.sh ${ec}"
-	exit
-fi
-
 #Initial prompts
+banner
+read -p "[+] Which OS user will files/directories be created/saved for? (case-sensitive): " USER
+while [[ $USER == "" ]]; do
+	read -p "Please input a user on this machine: " USER
+	if [ $USER > 1 ];then
+		ok=1
+	fi
+done
+while  [[ ! -d "/home/$USER" ]]; do
+	read -p "Please provide a user that exists in the HOME directory: " USER
+	while [[ $USER == "" ]]; do
+		read -p "Please provide a user that exists in the HOME directory: " USER
+		if [ $USER > 1 ];then
+			ok=1
+		fi
+	done			
+done
+
+#OVPN file paths
+htbVpnPath="/home/$USER/Downloads/lab_zBreeezey.ovpn" #<---- Change this path to your HackTheBox OVPN file's path. Leave the /home/$USER, and the "&" at the end.
+thmVpnPath="/home/$USER/Downloads/dopebeats.ovpn" #<---- Change this path to your TryHackMe OVPN file's path. Leave the /home/$USER, and the "&" at the end. 
+
 read -p "[+] Are you doing a TryHackMe or HackTheBox machine? [HTB/THM]: " response
 while true; do
 	case $response in
@@ -96,23 +103,19 @@ while true; do
 	esac
 done
 
-read -p "[+] Which OS user will files/directories be saved to? (case-sensitive): " USER
-while [[ $USER == "" ]]; do
-	read -p "Please input a user on this machine: " USER
-	if [ $USER > 1 ];then
-		ok=1
+#Check if OVPN file for site has been updated from default
+if [[ $response == "HTB" || $response == "htb" ]]; then
+	if [ $htbVpnPath == "/home/$USER/path/to/hackthebox.ovpn" ]; then
+		echo -e "${red}[!] The HackTheBox OVPN path has not been updated. Please update the path to your HTB VPN file on line 87. ${ec}"
+		exit
 	fi
-done
-while  [[ ! -d "/home/$USER" ]]; do
-	read -p "Please provide a user that exists in the HOME directory: " USER
-	while [[ $USER == "" ]]; do
-		read -p "Please provide a user that exists in the HOME directory: " USER
-		if [ $USER > 1 ];then
-			ok=1
-		fi
-	done			
-done  
-
+elif [[ $response == "THM" || $response == "thm" ]]; then
+	if [ $thmVpnPath == "/home/$USER/path/to/tryhackme.ovpn" ]; then
+		echo -e "${red}[!] The TryHackMe OVPN path has not been updated. Please update the path to your THM VPN file on line 88. ${ec}"
+		exit
+	fi
+fi
+	
 read -p "[+] What is the machines name?: " tn
 while [[ $tn == "" ]]; do
 	read -p "Please provide a name for the machine: " tn
@@ -230,7 +233,7 @@ elif
 	[ $vpn == 0 ];then
 		echo -e "${green}[+] Attempting to connect to VPN... ${ec}"
 		if [[ $response == "HTB" || $response == "htb" ]];then
-			xterm -e openvpn /home/$USER/Path/To/HackTheBox.ovpn& #<---- Change this path to your HackTheBox OVPN file's path. Leave the /home/$USER, and the "&" at the end.
+			xterm -e openvpn $htbVpnPath& 
 			sleep 5
 			vpn=$(ifconfig | grep "tun0" | wc -l)
 			if [ $vpn == 1 ];then
@@ -248,7 +251,7 @@ elif
 			fi
 		elif
 			[[ $response == "THM" || $response == "thm" ]];then
-				xterm -e openvpn /home/$USER/Path/To/TryHackMe.ovpn& #<---- Change this path to your TryHackMe OVPN file's path. Leave the /home/$USER, and the "&" at the end.
+				xterm -e openvpn $thmVpnPath& 
 				sleep 5
 				vpn=$(ifconfig | grep "tun0" | wc -l)
 				if [ $vpn == 1 ];then
@@ -273,11 +276,7 @@ clear -x
 
 
 #New Banner with variable output displayed
-echo "========================================================================================="
-figlet -c -f slant "EzEnum"
-echo -e "				  by: ${bg}zBreeez3y${ec}"
-echo -e "\n				 Version: ${blue}1.2.1 ${ec}"
-echo "========================================================================================="
+banner
 echo "========================================================================================="
 echo -e "[+] ${yellow}Site: ${ec}$site"
 echo -e "[+] ${yellow}Machine: ${ec}$tn"
@@ -365,27 +364,27 @@ fi
 #Make sub-directories	
 if [[ $response == "HTB" || $response == "htb" ]];then
 	if [ ! -d "/home/$user/Documents/HackTheBox/$tn" ];then
-		echo -e "${green}[+] Creating main directory, and sub-directories in the ${blue}HTB ${green}directory... ${ec}"
+		echo -e "${green}[+] Creating main ${blue}$tn${green} directory, and sub-directories under ${blue}/HackTheBox/ ${green}... ${ec}"
 		mkdir /home/$USER/Documents/HackTheBox/$tn
 		mkdir /home/$USER/Documents/HackTheBox/$tn/enumeration
 		mkdir /home/$USER/Documents/HackTheBox/$tn/exploitation
 		mkdir /home/$USER/Documents/HackTheBox/$tn/post-exploitation
 		sleep 1
 	else
-	 echo -e "${green}[+] Directories already exist. Continuing...${ec}"
+	 echo -e "${green}[+] Directories for ${blue}$tn${green} already exist. Continuing...${ec}"
 	 sleep 1
 	fi
 elif 
 	[[ $response == "THM" || $response == "thm" ]];then 
 		if [ ! -d "/home/$USER/Documents/TryHackMe/$tn" ];then
-			echo -e "${green}[+] Creating main directory, and sub-directories in the ${blue}THM ${green}directory... ${ec}"
+			echo -e "${green}[+] Creating main ${blue}$tn ${green} directory, and sub-directories under ${blue}/TryHackMe/ ${green}... ${ec}"
 			mkdir /home/$USER/Documents/TryHackMe/$tn
 			mkdir /home/$USER/Documents/TryHackMe/$tn/enumeration
 			mkdir /home/$USER/Documents/TryHackMe/$tn/exploitation
 			mkdir /home/$USER/Documents/TryHackMe/$tn/post-exploitation
 			sleep 1
 		else
-		 echo -e "${green}[+] Directories already exist. Continuing... ${ec}"
+		 echo -e "${green}[+] Directories for ${blue}$tn${green} already exist. Continuing... ${ec}"
 		 sleep 1
 		fi
 fi
@@ -426,7 +425,7 @@ if [[ $continue == "Y" || $continue == "y" ]];then
 		sleep 1
 	elif	
 		[[ $answer == "N" || $answer == "n" ]];then
-			echo -e "${yellow}[+] Skipping UDP scan... ${ec}"
+			echo -e "${yellow}[!] Skipping UDP scan... ${ec}"
 			sleep 1
 	
 	fi
@@ -439,7 +438,7 @@ elif
 			sleep 1
 		elif	
 			[[ $answer == "N" || $answer == "n" ]];then
-				echo -e "${yellow}[+] Skipping UDP scan... ${ec}"
+				echo -e "${yellow}[!] Skipping UDP scan... ${ec}"
 				sleep 1
 		fi
 fi
@@ -512,7 +511,7 @@ if [ $ftp == 1 ];then
 		cd $OLDPWD
 	elif 
 	 [ $anon == 0 ];then
-   echo -e "${blue}[+] FTP is open, but anonymous login does not appear to be allowed...${ec}"
+   echo -e "${blue}[!] FTP is open, but anonymous login does not appear to be allowed...${ec}"
  fi 
 fi
 
@@ -522,4 +521,3 @@ chown -R $USER:$USER /home/$USER/Documents/$site/$tn/
 sleep 1
 
 echo -e "${blue}[+] Script Complete.... #EzLife ${ec}" 
-
