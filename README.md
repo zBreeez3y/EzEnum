@@ -1,11 +1,19 @@
 # EzEnum 
  
 
-![image](https://user-images.githubusercontent.com/98996357/229011440-30629d2e-14ea-46e3-8c7f-971c712c75cb.png)
+
+![image](https://github.com/zBreeez3y/EzEnum/assets/98996357/f98594ee-4f43-46df-b3cf-bfb69d295695)
 
 
 
 ## Change Log
+### v1.2.2
+- Updated dependency check for SecLists
+- Created function for banner print, updated code to call banner function
+- Updated "check if root user" code block to run when first executed
+- Added checks to ensure OVPN file path has been updated from default
+- Minor prompt verbiage updates
+- Minor change to initial question order
 ### v1.2.1
 - Appended ".thm" local domain if choosing TryHackMe machine
 - Added another machine name variable for the local domain to be appended to
@@ -63,11 +71,8 @@ EzEnum will perform the following:
 
 
 ## Dependencies:
-  - **SecLists** (for wordlist, SecLists directory should be in the /usr/share directory for this script)
-     - I used Git to install SecLists
-        -     sudo apt install git
-              sudo git clone https://github.com/danielmiessler/SecLists.git
-              sudo mv seclists/ /usr/share/seclists   
+  - **SecLists** (SecLists directory should be in the /usr/share directory for this script)
+     -     sudo apt install seclists  
   - **Nmap**
      -     sudo apt install nmap
 
