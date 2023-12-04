@@ -84,8 +84,8 @@ while  [[ ! -d "/home/$USER" ]]; do
 done
 
 #OVPN file paths
-htbVpnPath="/home/$USER/Downloads/lab_zBreeezey.ovpn" #<---- Change this path to your HackTheBox OVPN file's path. Leave the /home/$USER, and the "&" at the end.
-thmVpnPath="/home/$USER/Downloads/dopebeats.ovpn" #<---- Change this path to your TryHackMe OVPN file's path. Leave the /home/$USER, and the "&" at the end. 
+htbVpnPath="/home/$USER/path/to/hackthebox.ovpn" #<---- Change this path to your HackTheBox OVPN file's path. Leave the /home/$USER, and the "&" at the end.
+thmVpnPath="/home/$USER/path/to/tryhackme.ovpn" #<---- Change this path to your TryHackMe OVPN file's path. Leave the /home/$USER, and the "&" at the end. 
 
 read -p "[+] Are you doing a TryHackMe or HackTheBox machine? [HTB/THM]: " response
 while true; do
