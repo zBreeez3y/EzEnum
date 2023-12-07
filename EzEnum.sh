@@ -34,7 +34,7 @@ ovpn=$(which openvpn | wc -l)
 sl=$(which seclists | wc -l)
 go=$(which gobuster | wc -l)
 
-tools=( $fig $nm $sc $xt $ovpn $go )
+tools=( $fig $nm $sc $xt $ovpn $sl $go )
 for bin in ${tools[@]}; do
 	while [[ $bin == 0 ]]; do
 		banner
