@@ -1,4 +1,9 @@
 # Change Log
+## v1.3.1
+- Updated logic to determine valid responses are provided on the initial prompts
+  - Fixes "unary operator expected" error when providing no response
+- Corrected indentation error in FTP Anonymous login check
+- Minor cosmetic updates
 ## v.1.3.0
 - Created functions for the following features: 
 	- Main THM/HTB directory creation
