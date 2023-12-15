@@ -5,7 +5,7 @@ banner() {
 	echo "========================================================================================="
 	figlet -c -f slant "EzEnum"
 	echo -e "				  By: ${bg}zBreeez3y${ec}" 
-	echo -e "\n				 Version: ${blue}1.3.0 ${ec}"
+	echo -e "\n				 Version: ${blue}1.3.1 ${ec}"
 	echo "========================================================================================="
 }
 
@@ -125,17 +125,17 @@ done
 #Initial prompts
 banner
 read -p "[+] Which OS user will files/directories be created/saved for? (case-sensitive): " USER
-while [[ $USER == "" ]]; do
+while [[ -z $USER ]]; do
 	read -p "Please input a user on this machine: " USER
-	if [ $USER > 1 ];then
+	if [ ! -z $USER ];then
 		ok=1
 	fi
 done
 while  [[ ! -d "/home/$USER" ]]; do
 	read -p "Please provide a user that exists in the HOME directory: " USER
-	while [[ $USER == "" ]]; do
+	while [[ -z $USER ]]; do
 		read -p "Please provide a user that exists in the HOME directory: " USER
-		if [ $USER -ge 1 ];then
+		if [ ! -z $USER ];then
 			ok=1
 		fi
 	done			
@@ -163,45 +163,45 @@ done
 #Check if OVPN file for site has been updated from default
 if [[ $response == "HTB" || $response == "htb" ]]; then
 	if [ $htbVpnPath == "/path/to/hackthebox.ovpn" ]; then
-		echo -e "${red}[!] The HackTheBox OVPN path has not been updated. Please update the path to your HTB VPN file on line 144. ${ec}"
+		echo -e "${red}[!] The HackTheBox OVPN path has not been updated. Please update the path to your HTB VPN file on line ${ec}144"
 		exit
 	fi
 elif [[ $response == "THM" || $response == "thm" ]]; then
 	if [ $thmVpnPath == "/path/to/tryhackme.ovpn" ]; then
-		echo -e "${red}[!] The TryHackMe OVPN path has not been updated. Please update the path to your THM VPN file on line 145. ${ec}"
+		echo -e "${red}[!] The TryHackMe OVPN path has not been updated. Please update the path to your THM VPN file on line ${ec}145"
 		exit
 	fi
 fi
-	
+
 read -p "[+] What is the machines name?: " tn
-while [[ $tn == "" ]]; do
+while [[ -z $tn ]]; do
 	read -p "Please provide a name for the machine: " tn
-	if [ $tn > 1 ];then
+	if [ ! -z $tn ];then
 		ok=1
 	fi
 done
 
 read -p "[+] What is the machines IPv4 address?: " ti
-while [[ $ti == "" ]]; do
+while [[ -z $ti ]]; do
 	read -p "Please provide an IPv4 address for the machine: " ti
-	if [ $ti > 1 ];then
+	if [ ! -z $ti ];then
 		ok=1
 	fi
 done
 regex='^([0-9]{1,3}\.){3}[0-9]{1,3}$'
 while ! [[ $ti =~ $regex  ]]; do
 	read -p "Please provide a valid IPv4 addresss: " ti
-	while [[ $ti == "" ]]; do
+	while [[ -z $ti ]]; do
 		read -p "Please provide a valid IPv4 address: " ti
-		if [ $ti -gt 1 ]; then
+		if [ ! -z $ti ]; then
 			ok=1
 		fi
 	done	
 done
 read -p "[+] Would you like to run a UDP scan? [Y/N]: " answer
-while [ $answer == "" ]; do
+while [ -z $answer ]; do
 	read -p 'Please respond with "Y" or "N": ' answer
-	if [ $answer > 1 ];then
+	if [ ! -z $answer ];then
 		ok=1
 	fi
 done
@@ -297,7 +297,7 @@ elif
 			sleep 5					
 		elif [ $vpn == 0 ];then
 			echo -e "${red}[!] Unable to connect to VPN..." 
-			echo -e "[!] Check and make sure you have the correct path for your ${blue}$site${red} OVPN file on line $line..."
+			echo -e "[!] Check and make sure you have the correct path for your ${blue}$site${red} OVPN file on line ${ec}$line${red}..."
 			echo -e "[+] Exiting script...${ec}" 
 			exit
 		fi 		
@@ -443,8 +443,7 @@ if [ $ftp == 1 ];then
 		cd /home/$USER/Documents/$site/$tn/enumeration/ftp
 		wget -m ftp://anonymous@$ntn/ 1>ftplog.txt 2>&1 
 		cd $OLDPWD
-	elif 
-		[ $anon == 0 ];then
+	elif [ $anon == 0 ];then
    		echo -e "${blue}[!] FTP is open, but anonymous login does not appear to be allowed...${ec}"
 	fi 
 fi
