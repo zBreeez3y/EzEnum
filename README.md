@@ -2,7 +2,8 @@
  
 
 
-![image](https://github.com/zBreeez3y/EzEnum/assets/98996357/fe35a533-95db-492c-ae6b-4521df0ce56c)
+![image](https://github.com/zBreeez3y/EzEnum/assets/98996357/0c9a7277-d47c-45dc-a4ed-f80dcbc9446f)
+
 
 
 
